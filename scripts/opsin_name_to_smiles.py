@@ -7,8 +7,8 @@ import os
 import urllib.request
 
 # OPSIN v2.8.0 — verified via SHA-256 checksum
-OPSIN_URL = "https://github.com/dan2097/opsin/releases/download/v2.8.0/opsin-cli-2.8.0-jar-with-dependencies.jar"
-OPSIN_SHA256 = None  # TODO: pin checksum after first verified download
+OPSIN_URL = "https://github.com/dan2097/opsin/releases/download/2.8.0/opsin-cli-2.8.0-jar-with-dependencies.jar"
+OPSIN_SHA256 = "d25bc08f41b8f6fcd6f35e18ab83f3b8d9218cdb003d55c5f74aaefe2e0c68ab"
 
 def verify_jar(path, expected_sha256):
     """Verify JAR integrity via SHA-256 checksum."""

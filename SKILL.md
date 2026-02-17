@@ -1,6 +1,24 @@
 ---
 name: pharmaclaw-chemistry-query
 description: Chemistry agent skill for PubChem API queries (compound info/properties, structures/SMILES/images, synthesis routes/references) + RDKit cheminformatics (SMILES to molecule props/logP/TPSA, 2D PNG/SVG viz, Morgan fingerprints, retrosynthesis/BRICS disconnects, multi-step synth planning). Use for chemistry tasks involving compounds, molecules, structures, PubChem data, RDKit analysis, SMILES processing, synthesis routes, retrosynthesis, reaction simulation. Triggers on chemistry, compounds, molecules, chemical data/properties, PubChem, RDKit, SMILES, structures, synthesis, reactions, retrosynthesis, synth plan/route.
+type: code
+dependencies:
+  python: ">=3.10"
+  python-packages:
+    - rdkit
+    - gradio
+    - pandas
+    - Pillow
+  system:
+    - java (JRE 8+ for OPSIN, optional — only needed for IUPAC name→SMILES conversion)
+  external-apis:
+    - PubChem REST API (public, no key required)
+    - ChEMBL API (public, no key required)
+    - PubMed/NCBI E-utilities (public, no key required)
+  notes: >
+    OPSIN JAR (13.8MB) is auto-downloaded on first use of IUPAC name conversion
+    with pinned SHA-256 checksum verification (d25bc08f...). All other functionality
+    works without Java/OPSIN.
 ---
 
 # Chemistry Query Agent v1.4.0
