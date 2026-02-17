@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from PIL import Image
 
-WORK_DIR = "/home/democritus/.openclaw/workspace/skills/chemistry-query/scripts"
+WORK_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scripts")
 
 def analyze(smiles):
     # Props
@@ -31,4 +31,4 @@ iface = gr.Interface(
 )
 
 if __name__ == "__main__":
-    iface.launch(share=True)
+    iface.launch(share=False)
