@@ -1,9 +1,3 @@
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-mol.png
-aspirin.png
-*.skill
+venv/
+netlify
+*.jar

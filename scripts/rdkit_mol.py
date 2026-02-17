@@ -9,6 +9,7 @@ from rdkit import DataStructs
 from rdkit.Chem import Descriptors, Draw, AllChem
 from rdkit.Chem import BRICS
 from rdkit.Chem.Draw import rdMolDraw2D
+from rdkit.Chem import rdChemReactions
 
 def get_mol(smiles):
     mol = Chem.MolFromSmiles(smiles)
@@ -34,16 +35,24 @@ def resolve_target(target):
     return data["result"]
 
 def brics_retro(mol, depth):
+    """Recursive BRICS retrosynthesis. Returns list of fragment SMILES."""
     if depth <= 0:
         return [Chem.MolToSmiles(mol, isomericSmiles=True)]
     try:
-        frags = BRICS.BRICSDecompose(mol)
+        frags = BRICS.BRICSDecompose(mol)  # returns set of SMILES strings
+        if not frags or len(frags) <= 1:
+            return [Chem.MolToSmiles(mol, isomericSmiles=True)]
         precursors = []
-        for frag in frags:
-            Chem.SanitizeMol(frag)
-            precursors += brics_retro(frag, depth - 1)
+        for frag_smi in frags:
+            # Remove BRICS dummy atom labels [n*] for cleaner output
+            clean_smi = re.sub(r'\[\d+\*\]', '[H]', frag_smi)
+            frag_mol = Chem.MolFromSmiles(clean_smi)
+            if frag_mol is not None:
+                precursors += brics_retro(frag_mol, depth - 1)
+            else:
+                precursors.append(frag_smi)
         return list(set(precursors))
-    except:
+    except Exception:
         return [Chem.MolToSmiles(mol, isomericSmiles=True)]
 
 def main():
@@ -135,7 +144,7 @@ def main():
             reactant_smiles = re.split(r'[,; \\t\\n]+', args.reactants)
             reactant_smiles = [s.strip() for s in reactant_smiles if s.strip()]
             reactants_mols = [get_mol(smi) for smi in reactant_smiles]
-            rxn = AllChem.ChemicalReactionFromSmarts(args.smarts)
+            rxn = rdChemReactions.ReactionFromSmarts(args.smarts)
             if rxn is None:
                 raise ValueError("Invalid SMARTS reaction template")
             products = rxn.RunReactants(reactants_mols)
